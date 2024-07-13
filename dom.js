@@ -48,14 +48,56 @@ function sleep(milliseconds) {
 function freeCandy() {
     var candy = document.querySelector("#candy");
     candy.setAttribute("style", "");
-    everythingColor(false);
+    everythingColor();
+    resizeCandyH();
+    everythingCandy();
+}
+
+const getElementsWithNoChildren = (target) => {
+    let candidates;
+
+    if (target && typeof target.querySelectorAll === 'function') {
+        candidates = target.querySelectorAll('*');
+    }
+    else if (target && typeof target.length === 'number') {
+        candidates = target;
+    }
+    else {
+        candidates = document.querySelectorAll('*');
+    }
+
+    return Array.from(candidates).filter((elem) => {
+        return elem.children.length === 0;
+    });
+};
+
+function everythingCandy() {
+    var everything = getElementsWithNoChildren();
+    
+    for (var i = 0; i < everything.length; i++) {
+        console.log(everything[i].tagName, everything[i].textContent)
+        everything[i].innerHTML = "candy";
+    }
+}
+
+function resizeCandyH(direction) {
+    var candy = document.querySelector("#candy");
+    if (candy.getAttribute('height') === null) {
+        candy.setAttribute('height', 10);
+    }
+    if (direction === undefined) {
+        direction = 1;
+    }
+    candy.setAttribute('height', Number(candy.getAttribute('height'))+direction);
+    // console.log(candy.getAttribute('height'));
+    setTimeout(function(){resizeCandyH(direction)}, 10);
 }
 
 function everythingColor(opposite) {
     if (opposite) {
-        color = "#00f"
+        color = "#00f";
     } else {
-        color = "#f00"
+        color = "#f00";;
     }
     var everything = document.querySelectorAll("*");
     
@@ -63,5 +105,5 @@ function everythingColor(opposite) {
         everything[i].style.backgroundColor = color;
     }
 
-    setTimeout(function(){everythingColor(!opposite)})
+    setTimeout(function(){everythingColor(!opposite)}, 100);
 }
